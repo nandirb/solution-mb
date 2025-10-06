@@ -27,6 +27,7 @@ A Node.js API with TypeScript for managing departments and citizens data.
 - `GET /api/departments/:id/parent` - Get top parent
 - `GET /api/departments/:id/parents` - Get all parents
 - `POST /api/citizens/age` - Calculate age from RD
+- `POST /api/citizens/update-ages` - Update all citizen ages
 
 ## Tech Stack
 

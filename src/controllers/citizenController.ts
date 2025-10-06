@@ -53,6 +53,47 @@ export const calculateAge = async (req: Request, res: Response) => {
   }
 };
 
+export const updateAllAges = async (req: Request, res: Response) => {
+  try {
+    const citizensWithNullAges = await sql`
+      SELECT id, "registerNo" 
+      FROM citizen 
+      WHERE age IS NULL
+    `;
+
+    let updatedCount = 0;
+    let errorCount = 0;
+    const errors: string[] = [];
+
+    for (const citizen of citizensWithNullAges) {
+      try {
+        const calculatedAge = calculateAgeFromRD(citizen.registerNo);
+
+        await sql`
+          UPDATE citizen 
+          SET age = ${calculatedAge.years}, "updatedAt" = NOW()
+          WHERE id = ${citizen.id}
+        `;
+
+        updatedCount++;
+      } catch (error) {
+        errorCount++;
+        errors.push(`Failed to update age for citizen ${citizen.id}: ${error}`);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Updated ${updatedCount} citizens' ages`,
+      updatedCount,
+      errorCount,
+      errors: errors.length > 0 ? errors : undefined,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const getCitizens = async (req: Request, res: Response) => {
   try {
     const { filter, sortBy, groupBy } = req.query;
@@ -73,6 +114,17 @@ export const getCitizens = async (req: Request, res: Response) => {
         default:
           return res.status(400).json({ error: "Invalid filter type" });
       }
+    }
+
+    // Calculate ages for citizens where age is null
+    if (Array.isArray(citizens)) {
+      citizens = citizens.map((citizen: any) => {
+        if (citizen.age === null || citizen.age === undefined) {
+          const calculatedAge = calculateAgeFromRD(citizen.registerNo);
+          return { ...citizen, age: calculatedAge.years };
+        }
+        return citizen;
+      });
     }
 
     res.json({ success: true, data: citizens });
