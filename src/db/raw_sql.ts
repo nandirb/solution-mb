@@ -32,28 +32,29 @@ INSERT INTO citizen (id, "firstName", "lastName", "registerNo", "aimagName") VAL
   (15, 'test4', 'test1LastName5', 'AA93062213', 'Баян-Өлгий');
   `;
 
-const QUERY_GET_CITIZENS_BY_AIMAG = sql`SELECT 
-  "aimagName" as "Аймаг",
-  COUNT(*) as "Иргэдийн тоо"
+const QUERY_GET_CITIZENS_BY_AIMAG = sql`
+SELECT 
+  "aimagName",
+  COUNT(*)
 FROM citizen 
 GROUP BY "aimagName"
 ORDER BY COUNT(*) DESC;`;
 
 const QUERY_GET_OLDEST_CITIZENS_BY_AIMAG = sql`
-SELECT DISTINCT ON ("aimagName")
-  "aimagName" as "Аймаг",
-  "firstName" || ' ' || "lastName" as "Нэр",
-  "registerNo" as "Регистр",
-  age as "Нас"
+SELECT DISTINCT ON (aimagName)
+  aimagName,
+  firstName || ' ' || lastName,
+  registerNo,
+  age
 FROM citizen
-ORDER BY "aimagName", age DESC;`;
+ORDER BY aimagName, age DESC;`;
 
 const QUERY_GET_SIMILAR_NAMES = sql`
 SELECT 
-  "firstName" as "Нэр",
-  COUNT(*) as "Тоо",
-  STRING_AGG("lastName", ', ') as "Овог жагсаалт",
-  STRING_AGG("registerNo", ', ') as "Регистрийн дугаар"
+  "firstName",
+  COUNT(*),
+  STRING_AGG("lastName", ', '),
+  STRING_AGG("registerNo", ', ')
 FROM citizen
 GROUP BY "firstName"
 HAVING COUNT(*) > 1
