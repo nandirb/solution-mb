@@ -33,5 +33,4 @@ A Node.js API with TypeScript for managing departments and citizens data.
 
 - Node.js + TypeScript
 - Express.js
-- PostgreSQL
-- CORS + Helmet for security
+- SQL  (Supabase)
