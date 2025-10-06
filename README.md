@@ -1,33 +1,36 @@
-# Tech Exam Solutions
+# Solutions API
 
-This workspace is set up for your tech exam with Node.js and PostgreSQL integration.
+A Node.js API with TypeScript for managing departments and citizens data.
 
-## Setup Instructions
+## Quick Start
 
 1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. **Configure database:**
-   - Copy the database configuration in `config.js`
-   - Update the database credentials to match your PostgreSQL setup
-   - Create a database named `tech_exam_db` (or update the name in config)
-
-3. **Run the application:**
+2. **Run the application:**
    ```bash
+   npm run dev:api
+   ```
+
+3. **Build and start:**
+   ```bash
+   npm run build
    npm start
    ```
 
-## Project Structure
+## API Endpoints
 
-- `index.js` - Main application file with PostgreSQL connection
-- `config.js` - Database and application configuration
-- `package.json` - Dependencies and scripts
+- `GET /api/departments` - Get all departments
+- `GET /api/departments/:id` - Get department by ID
+- `GET /api/departments/:id/parent` - Get top parent
+- `GET /api/departments/:id/parents` - Get all parents
+- `POST /api/citizens/age` - Calculate age from RD
 
-## Database Connection
+## Tech Stack
 
-The application uses a PostgreSQL connection pool and includes:
-- Connection testing
-- Example query execution
-- Graceful shutdown handling
+- Node.js + TypeScript
+- Express.js
+- PostgreSQL
+- CORS + Helmet for security
